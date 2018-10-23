@@ -1,0 +1,84 @@
+#!/bin/bash
+Usage(){
+cat << eof
+Usage:
+       bash $0 -p [nmq|redis|mixd|nomixd] -f filename -n nmqproduct
+Example:
+       bash $0 -p nmq -f filename -n tieba 
+
+!!!!! mixd !!!!
+eof
+exit
+}
+
+[[ $# -eq 0 ]] && Usage
+
+while getopts f:p:n:h arg;do
+      case $arg in 
+            f)
+                FN=$OPTARG
+            ;;
+            n)
+                PN=$OPTARG
+            ;;
+            h)
+                Usage
+            ;;
+            p)
+                PD=$OPTARG
+            ;;
+      esac
+
+done
+
+#var
+HOSTARR=()
+case $PD in
+        nmq)
+            PREFIX='arch-nmq-backup'
+            if [ -n $PN ];then
+                PREFIX="arch-nmq-$PN"
+            fi
+        ;;
+        redis)
+            PREFIX='arch-centos-redis'
+        ;;
+        mixd)
+            PREFIX='bdrp-mixd'
+        ;;
+        nomixd)
+            PREFIX='bdrp-nomixd'
+        ;;
+esac
+
+#Func
+GenHostname()
+{
+local prefix=$1
+local host=$2
+local tf='/tmp/tf.log'
+
+for x in `seq -w 1 1000000`;do
+      ( echo $x | grep -w '[1-9]' > /dev/null ) && x="0$x"
+      hostname=`echo $host | sed "s/\(^[a-z]\{1,5\}[0-9]\{0,2\}-\).*\.\(.*\)/\\1${prefix}${x}\.\\2/"`
+      if ( echo ${HOSTARR[@]} | grep $hostname > /dev/null );then
+        continue
+      fi
+
+      if( host $hostname | grep 'has add' > /dev/null );then
+        continue
+      else
+        #echo $hostname > $tf
+        HOSTARR=(${HOSTARR[@]} $hostname)
+        echo $hostname
+        break
+      fi
+done
+}
+
+#Main
+
+for a in `cat $FN`;do
+        echo -n "${a},"
+        GenHostname $PREFIX $a
+done
