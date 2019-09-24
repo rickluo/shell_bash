@@ -2,7 +2,7 @@
 Usage(){
 cat << eof
 Usage:
-       bash $0 -p [nmq|redis|mixd|nomixd] -f filename -n nmqproduct
+       bash $0 -p [mq|redis|mixd|nomixd] -f filename -n nmqproduct
 Example:
        bash $0 -p nmq -f filename -n tieba 
 
