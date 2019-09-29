@@ -4,7 +4,7 @@ cat << eof
 Usage:
        bash $0 -p [mq|redis|mixd|nomixd] -f filename -n nmqproduct
 Example:
-       bash $0 -p nmq -f filename -n tieba 
+       bash $0 -p mq -f filename -n tieba 
 
 !!!!! mixd !!!!
 eof
@@ -35,19 +35,19 @@ done
 HOSTARR=()
 case $PD in
         nmq)
-            PREFIX='arch-nmq-backup'
+            PREFIX='arch-mq-backup'
             if [ -n $PN ];then
-                PREFIX="arch-nmq-$PN"
+                PREFIX="arch-mq-$PN"
             fi
         ;;
         redis)
             PREFIX='arch-centos-redis'
         ;;
         mixd)
-            PREFIX='bdrp-mixd'
+            PREFIX='b-mixd'
         ;;
         nomixd)
-            PREFIX='bdrp-nomixd'
+            PREFIX='b-nomixd'
         ;;
 esac
 
