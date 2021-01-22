@@ -1,5 +1,5 @@
 #!/usr/bin/expect
-set pword "gd360.2020"
+set pword ""
 set ip [lindex $argv 0]
 set timeout 30
 
